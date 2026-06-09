@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CyberQuest Ops is a story-driven ethical hacking learning game with safe simulated missions, XP, paths, reports, and labs." />
+  <title>CyberQuest Ops - Ethical Hacking Mission Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="scanlines"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">🛡️</div>
+      <div>
+        <p class="eyebrow">WhiteHat Guild</p>
+        <h1>CyberQuest Ops</h1>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Main navigation">
+      <button class="nav-link active" data-view="dashboard"><span>🏠 Command Center</span></button>
+      <button class="nav-link" data-view="map"><span>🗺️ City Mission Map</span></button>
+      <button class="nav-link" data-view="paths"><span>🧭 Career Paths</span></button>
+      <button class="nav-link" data-view="skilltree"><span>🌳 Skill Tree</span></button>
+      <button class="nav-link" data-view="notebook"><span>📒 Evidence Notebook</span></button>
+      <button class="nav-link" data-view="reports"><span>📝 Reports</span></button>
+      <button class="nav-link" data-view="settings"><span>⚙️ Settings</span></button>
+    </nav>
+
+    <div class="player-card compact">
+      <p class="eyebrow">Operator</p>
+      <h2 id="sidebarAlias">Rookie</h2>
+      <div class="level-line">
+        <span id="sidebarLevel">Level 1</span>
+        <span id="sidebarRank">Trainee</span>
+      </div>
+      <div class="bar"><span id="sidebarXpBar"></span></div>
+    </div>
+  </aside>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation">Menu</button>
+      <div>
+        <p class="eyebrow">Safe simulated cybersecurity RPG</p>
+        <h2 id="viewTitle">Command Center</h2>
+      </div>
+      <div class="topbar-actions">
+        <button class="ghost-btn" id="quickSaveBtn">Save</button>
+        <button class="primary-btn small" id="continueBtn">Continue Mission</button>
+      </div>
+    </header>
+
+    <section class="tip-banner" id="tipBanner" aria-live="polite">
+      <div class="tip-mascot" aria-hidden="true">💡</div>
+      <div class="tip-content">
+        <p class="eyebrow">Mentor Tip</p>
+        <h3 id="tipTitle">Play smart, stay legal.</h3>
+        <p id="tipText">Every mission is simulated. Your goal is to learn the idea, collect evidence, and explain the fix.</p>
+      </div>
+      <button class="ghost-btn small-tip-btn" id="newTipBtn">New Tip</button>
+    </section>
+
+    <section class="view active" id="view-dashboard" aria-labelledby="viewTitle">
+      <div class="hero-grid">
+        <article class="hero-card">
+          <div class="hero-glow"></div>
+          <p class="eyebrow">Welcome to CyberCity</p>
+          <h2>Choose your path. Complete missions. Learn ethical hacking by playing.</h2>
+          <p class="muted max-line">This game uses fictional companies, toy systems, and simulated terminals. You learn attacker thinking, defender thinking, secure coding, and professional reporting without touching real targets.</p>
+          <div class="hero-actions">
+            <button class="primary-btn" data-action="open-first-mission">Start First Mission</button>
+            <button class="secondary-btn" data-action="goto-map">Open City Map</button>
+          </div>
+        </article>
+
+        <article class="stats-panel">
+          <div class="profile-row">
+            <div class="avatar" id="avatarInitials">RK</div>
+            <div>
+              <p class="eyebrow">Current Operator</p>
+              <h3 id="playerAlias">Rookie</h3>
+              <p class="muted" id="playerRank">Trainee</p>
+            </div>
+          </div>
+          <div class="stat-grid">
+            <div class="stat"><span id="statLevel">1</span><label>Level</label></div>
+            <div class="stat"><span id="statXp">0</span><label>XP</label></div>
+            <div class="stat"><span id="statCredits">150</span><label>Credits</label></div>
+            <div class="stat"><span id="statEthics">100</span><label>Ethics</label></div>
+          </div>
+          <div class="bar-label"><span>Progress to next level</span><strong id="nextLevelText">0 / 500 XP</strong></div>
+          <div class="bar tall"><span id="xpBar"></span></div>
+        </article>
+      </div>
+
+      <div class="dashboard-grid">
+        <article class="panel wide">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Mission Board</p>
+              <h3>Recommended Next Missions</h3>
+            </div>
+            <button class="ghost-btn" data-action="goto-map">View all</button>
+          </div>
+          <div class="mission-list" id="recommendedMissions"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Badges</p>
+              <h3>Unlocked Achievements</h3>
+            </div>
+          </div>
+          <div class="badge-list" id="badgeList"></div>
+        </article>
+      </div>
+
+      <div class="dashboard-grid bottom-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Safety System</p>
+              <h3>Ethics Guardrails</h3>
+            </div>
+          </div>
+          <ul class="check-list">
+            <li>No real targets. Every lab is fictional or simulated.</li>
+            <li>Every mission starts with scope and permission.</li>
+            <li>Every offensive concept ends with detection and patching.</li>
+            <li>Bad choices lower ethics and can fail a mission.</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Active Case</p>
+              <h3 id="activeCaseTitle">No active mission</h3>
+            </div>
+          </div>
+          <p class="muted" id="activeCaseSummary">Start a mission from the map or recommended list.</p>
+          <button class="primary-btn full" id="activeCaseBtn">Open Mission</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" id="view-map">
+      <div class="panel map-intro">
+        <div>
+          <p class="eyebrow">Open city campaign</p>
+          <h3>CyberCity Mission Map</h3>
+          <p class="muted">Like a GTA-style mission board, each district represents a cybersecurity path. Start with foundations, then branch into web, network, SOC, WordPress, cloud, and capstone missions.</p>
+        </div>
+        <div class="legend">
+          <span><i class="dot available"></i>Available</span>
+          <span><i class="dot locked"></i>Locked</span>
+          <span><i class="dot done"></i>Complete</span>
+        </div>
+      </div>
+      <div class="city-map" id="cityMap"></div>
+    </section>
+
+    <section class="view" id="view-paths">
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Career direction</p>
+            <h3>Choose any learning path</h3>
+          </div>
+        </div>
+        <p class="muted">Nothing forces a single linear route. The Core Academy unlocks the city. After that you can become a web pentester, network security explorer, SOC defender, WordPress security specialist, cloud defender, or balanced operator.</p>
+      </div>
+      <div class="path-grid" id="pathGrid"></div>
+    </section>
+
+    <section class="view" id="view-skilltree">
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">RPG progression</p>
+            <h3>Skill Tree</h3>
+          </div>
+        </div>
+        <div class="skilltree" id="skillTree"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-notebook">
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Investigation memory</p>
+            <h3>Evidence Notebook</h3>
+          </div>
+          <button class="ghost-btn" id="clearEvidenceBtn">Clear Notebook</button>
+        </div>
+        <p class="muted">Evidence collected in missions appears here. Real pentesters take clear notes; this game trains that habit.</p>
+        <div class="evidence-list" id="evidenceList"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-reports">
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Professional output</p>
+            <h3>Mission Reports</h3>
+          </div>
+          <button class="ghost-btn" id="exportReportsBtn">Export Reports</button>
+        </div>
+        <p class="muted">Boss missions and report challenges help players build a portfolio-style writing habit.</p>
+        <div class="report-list" id="reportList"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-settings">
+      <div class="settings-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Player settings</p>
+              <h3>Customize Operator</h3>
+            </div>
+          </div>
+          <label class="field-label" for="aliasInput">Operator alias</label>
+          <input class="input" id="aliasInput" placeholder="Rookie" />
+          <button class="primary-btn" id="saveAliasBtn">Save Alias</button>
+        </article>
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Save data</p>
+              <h3>Backup or Reset</h3>
+            </div>
+          </div>
+          <div class="button-stack">
+            <button class="secondary-btn" id="exportSaveBtn">Export Save JSON</button>
+            <label class="secondary-btn file-label" for="importSaveInput">Import Save JSON</label>
+            <input type="file" id="importSaveInput" accept="application/json" hidden />
+            <button class="danger-btn" id="resetGameBtn">Reset Game</button>
+          </div>
+        </article>
+        <article class="panel wide">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Project mode</p>
+              <h3>What this prototype includes</h3>
+            </div>
+          </div>
+          <div class="feature-grid">
+            <div><strong>Branching paths</strong><span>Core, Web, Network, SOC, WordPress, Cloud, Capstone</span></div>
+            <div><strong>Safe labs</strong><span>Simulated console and fictional targets only</span></div>
+            <div><strong>Progression</strong><span>XP, credits, level, badges, ethics score</span></div>
+            <div><strong>Reports</strong><span>Players practice explaining findings and fixes</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="mission-modal" id="missionModal" role="dialog" aria-modal="true" aria-labelledby="missionTitle" hidden>
+    <div class="modal-backdrop" data-action="close-mission"></div>
+    <article class="mission-window">
+      <header class="mission-header">
+        <div>
+          <p class="eyebrow" id="missionPathLabel">Mission</p>
+          <h2 id="missionTitle">Mission Title</h2>
+          <p class="muted" id="missionMeta">Difficulty 1</p>
+        </div>
+        <button class="icon-btn" data-action="close-mission" aria-label="Close mission">X</button>
+      </header>
+      <div class="mission-progress-wrap">
+        <div class="mission-progress"><span id="missionProgressBar"></span></div>
+        <p id="missionStepText">Step 1 of 1</p>
+      </div>
+      <div class="mission-body" id="missionBody"></div>
+      <footer class="mission-footer">
+        <button class="ghost-btn" id="missionHintBtn">Ask Mentor (-10 credits)</button>
+        <div class="mission-footer-actions">
+          <button class="secondary-btn" id="missionBackBtn">Back</button>
+          <button class="primary-btn" id="missionNextBtn">Next</button>
+        </div>
+      </footer>
+    </article>
+  </div>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
